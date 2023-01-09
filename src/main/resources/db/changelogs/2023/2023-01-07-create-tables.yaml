@@ -1,0 +1,100 @@
+databaseChangeLog:
+  - changeSet:
+      id: "1"
+      author: test@test.com
+      comment: Create table tour
+      preConditions:
+        - onFail: MARK_RAN
+        - onError: CONTINUE
+        - not:
+            - tableExists:
+                tableName: tour
+      changes:
+        - createTable:
+            tableName: tour
+            columns:
+              - column:
+                  name: id
+                  autoIncrement: true
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: creation_date
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: "2"
+      author: test@test.com
+      comment: Create table story
+      preConditions:
+        - onFail: MARK_RAN
+        - onError: CONTINUE
+        - not:
+            - tableExists:
+                tableName: story
+      changes:
+        - createTable:
+            tableName: story
+            columns:
+              - column:
+                  name: id
+                  autoIncrement: true
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: creation_date
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: lang
+                  type: varchar(2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: title
+                  type: varchar(150)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: published
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: story_order
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tour_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: "3"
+      author: test@test.com
+      comment: Create foreign key for table story on column tour_id
+      preConditions:
+        - onFail: MARK_RAN
+        - onError: CONTINUE
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyTableName: story
+                foreignKeyName: story_tour_id_fk
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: tour_id
+            baseTableName: story
+            constraintName: story_tour_id_fk
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: tour
